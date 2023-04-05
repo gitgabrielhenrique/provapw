@@ -13,7 +13,8 @@ public class ContasReceber {
     private Integer id;
     private Date dataconta;
     private BigDecimal valorConte;
-
+@ManyToOne
+@JoinColumn(name = "idcliente")
     private Cliente cliente;
 
     public Integer getId() {

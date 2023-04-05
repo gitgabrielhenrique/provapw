@@ -1,0 +1,1 @@
+alter table contasreceber add constraint FK_clienteconta FOREIGN key (idcliente) references cliente(id);
