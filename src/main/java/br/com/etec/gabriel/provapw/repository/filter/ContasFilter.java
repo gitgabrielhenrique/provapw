@@ -6,7 +6,7 @@ import java.util.Date;
 public class ContasFilter {
   private Integer contasid;
   private Date dataconta;
-  private BigDecimal valorConte;
+  private BigDecimal valorConta;
 private String nomeCliente;
 
   public Integer getContasid() {
@@ -25,12 +25,12 @@ private String nomeCliente;
     this.dataconta = dataconta;
   }
 
-  public BigDecimal getValorConte() {
-    return valorConte;
+  public BigDecimal getValorConta() {
+    return valorConta;
   }
 
-  public void setValorConte(BigDecimal valorConte) {
-    this.valorConte = valorConte;
+  public void setValorConta(BigDecimal valorConta) {
+    this.valorConta = valorConta;
   }
 
   public String getNomeCliente() {

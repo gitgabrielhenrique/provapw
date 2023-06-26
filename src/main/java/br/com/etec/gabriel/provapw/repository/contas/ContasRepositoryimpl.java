@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContasRepositoryimpl {
+public class ContasRepositoryimpl implements ContasRepositoryQuery{
 
 
   @Autowired
@@ -39,7 +39,7 @@ public class ContasRepositoryimpl {
 
     Predicate[] predicates = criarRestricoes(builder, contasFilter, root);
     criteria.where(predicates);
-    criteria.orderBy(builder.asc(root.get("nomealuno")));
+    criteria.orderBy(builder.asc(root.get("nomeCliente")));
 
     TypedQuery<ContasDto> query = manager.createQuery(criteria);
     adicionarRestricoesDaPaginacao(query, pageable);
@@ -71,11 +71,10 @@ public class ContasRepositoryimpl {
   private Predicate[] criarRestricoes(CriteriaBuilder builder, ContasFilter contasFilter, Root<ContasReceber> root) {
     List<Predicate> predicates = new ArrayList<>();
 
-    if (!StringUtils.isEmpty(contasFilter.getNomeCliente()))
+    if (contasFilter.getDataconta() !=null)
     {
-      predicates.add(builder.like(builder.lower(root.get("nomeCLiente ")),
-        "%" + contasFilter.getNomeCliente().toLowerCase() + "%"
-      ));
+    predicates.add(builder.greaterThanOrEqualTo(root.get("dataconta"), contasFilter.getDataconta())
+    );
     }
 
     if (!StringUtils.isEmpty(contasFilter.getNomeCliente()))
@@ -85,18 +84,10 @@ public class ContasRepositoryimpl {
       ));
     }
 
-    if (!StringUtils.isEmpty(contasFilter.getNomeCliente() ))
+    if (contasFilter.getValorConta()!=null)
     {
-      predicates.add(builder.equal(builder.lower(root.get("cidade").get("uf")),
-        contasFilter.getUf().toLowerCase()
-      ));
-
-      if (!StringUtils.isEmpty(alunoFilter.getNomecurso()))
-      {
-        predicates.add(builder.like(builder.lower(root.get("curso").get("nomecurso")),
-          "%" + alunoFilter.getNomecurso().toLowerCase() + "%"
-        ));
-      }
+      predicates.add(builder.greaterThanOrEqualTo(root.get("valorConta"), contasFilter.getDataconta())
+      );
     }
 
     return predicates.toArray(new Predicate[predicates.size()]);
