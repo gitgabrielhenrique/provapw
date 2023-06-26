@@ -34,8 +34,7 @@ public class ContasRepositoryimpl {
       root.get("contasid")
       ,root.get("dataconta")
       ,root.get("valorconta")
-      ,root.get("cidade").get("nomecidade")
-      ,root.get("Cliente").get("nomecliente")
+      ,root.get("Cliente").get("nomeCliente")
     ));
 
     Predicate[] predicates = criarRestricoes(builder, alunoFilter, root);
