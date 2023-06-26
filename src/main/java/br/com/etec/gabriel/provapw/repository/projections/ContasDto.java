@@ -40,11 +40,11 @@ public class ContasDto {
     this.valorconta = valorconta;
   }
 
-  public String getNomecliente() {
+  public String getNomeCliente() {
     return nomeCliente;
   }
 
-  public void setNomecliente(String nomecliente) {
-    this.nomeCliente = nomecliente;
+  public void setNomeCliente(String nomeCliente) {
+    this.nomeCliente = nomeCliente;
   }
 }

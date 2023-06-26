@@ -37,14 +37,14 @@ public class ContasRepositoryimpl {
       ,root.get("Cliente").get("nomeCliente")
     ));
 
-    Predicate[] predicates = criarRestricoes(builder, alunoFilter, root);
+    Predicate[] predicates = criarRestricoes(builder, contasFilter, root);
     criteria.where(predicates);
     criteria.orderBy(builder.asc(root.get("nomealuno")));
 
-    TypedQuery<AlunoDto> query = manager.createQuery(criteria);
+    TypedQuery<ContasDto> query = manager.createQuery(criteria);
     adicionarRestricoesDaPaginacao(query, pageable);
 
-    return new PageImpl<>(query.getResultList(),pageable, total(alunoFilter));
+    return new PageImpl<>(query.getResultList(),pageable, total(contasFilter));
   }
   private void adicionarRestricoesDaPaginacao(TypedQuery<?> query, Pageable pageable)
   {
@@ -55,40 +55,40 @@ public class ContasRepositoryimpl {
     query.setFirstResult(primeiroRegistroDaPagina);
     query.setMaxResults(totalRegistroPorPagina);
   }
-  private Long total(AlunoFilter alunoFilter)
+  private Long total(ContasFilter contasFilter)
   {
     CriteriaBuilder builder = manager.getCriteriaBuilder();
     CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-    Root<Aluno> root = criteria.from(Aluno.class);
+    Root<ContasReceber> root = criteria.from(ContasReceber.class);
 
-    Predicate[] predicates = criarRestricoes(builder, alunoFilter, root);
+    Predicate[] predicates = criarRestricoes(builder, contasFilter, root);
     criteria.where(predicates);
-    criteria.orderBy(builder.asc(root.get("nomealuno")));
+    criteria.orderBy(builder.asc(root.get("nomeCliente")));
     criteria.select(builder.count(root));
     return manager.createQuery(criteria).getSingleResult();
   }
 
-  private Predicate[] criarRestricoes(CriteriaBuilder builder, AlunoFilter alunoFilter, Root<Aluno> root) {
+  private Predicate[] criarRestricoes(CriteriaBuilder builder, ContasFilter contasFilter, Root<ContasReceber> root) {
     List<Predicate> predicates = new ArrayList<>();
 
-    if (!StringUtils.isEmpty(alunoFilter.getNomealuno()))
+    if (!StringUtils.isEmpty(contasFilter.getNomeCliente()))
     {
-      predicates.add(builder.like(builder.lower(root.get("nomealuno ")),
-        "%" + alunoFilter.getNomealuno().toLowerCase() + "%"
+      predicates.add(builder.like(builder.lower(root.get("nomeCLiente ")),
+        "%" + contasFilter.getNomeCliente().toLowerCase() + "%"
       ));
     }
 
-    if (!StringUtils.isEmpty(alunoFilter.getNomecidade()))
+    if (!StringUtils.isEmpty(contasFilter.getNomeCliente()))
     {
-      predicates.add(builder.like(builder.lower(root.get("cidade").get("nomecidade")),
-        "%" + alunoFilter.getNomecidade().toLowerCase() + "%"
+      predicates.add(builder.like(builder.lower(root.get("Cliente").get("nomecliente")),
+        "%" + contasFilter.getNomeCliente().toLowerCase() + "%"
       ));
     }
 
-    if (!StringUtils.isEmpty(alunoFilter.getUf() ))
+    if (!StringUtils.isEmpty(contasFilter.getNomeCliente() ))
     {
       predicates.add(builder.equal(builder.lower(root.get("cidade").get("uf")),
-        alunoFilter.getUf().toLowerCase()
+        contasFilter.getUf().toLowerCase()
       ));
 
       if (!StringUtils.isEmpty(alunoFilter.getNomecurso()))
