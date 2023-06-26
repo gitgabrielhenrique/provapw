@@ -1,4 +1,4 @@
 package br.com.etec.gabriel.provapw.repository.Cliente;
 
-public class ClienteRepositoryImpl {
+public class ClienteRepositoryImpl  implements ClienteRepositoryQuery {
 }
