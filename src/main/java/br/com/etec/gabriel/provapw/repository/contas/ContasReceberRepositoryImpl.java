@@ -1,7 +1,7 @@
 package br.com.etec.gabriel.provapw.repository.contas;
 
 import br.com.etec.gabriel.provapw.model.ContasReceber;
-import br.com.etec.gabriel.provapw.repository.filter.ContasFilter;
+import br.com.etec.gabriel.provapw.repository.filter.ContasReceberFilter;
 import br.com.etec.gabriel.provapw.repository.projections.ContasDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,33 +18,33 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContasRepositoryimpl implements ContasRepositoryQuery{
+public class ContasReceberRepositoryImpl implements ContasReceberRepositoryQuery {
 
 
   @Autowired
   private EntityManager manager;
 
   @Override
-  public Page<ContasDto> filtrar(ContasFilter contasFilter, Pageable pageable) {
+  public Page<ContasDto> filtrar(ContasReceberFilter contasReceberFilter, Pageable pageable) {
     CriteriaBuilder builder = manager.getCriteriaBuilder();
     CriteriaQuery<ContasDto> criteria = builder.createQuery(ContasDto.class);
     Root<ContasReceber> root = criteria.from(ContasReceber.class);
 
     criteria.select(builder.construct(ContasDto.class,
-      root.get("contasid")
+      root.get("id")
       ,root.get("dataconta")
-      ,root.get("valorconta")
-      ,root.get("Cliente").get("nomeCliente")
+      ,root.get("valorConte")
+      ,root.get("cliente").get("nomeCliente")
     ));
 
-    Predicate[] predicates = criarRestricoes(builder, contasFilter, root);
+    Predicate[] predicates = criarRestricoes(builder, contasReceberFilter, root);
     criteria.where(predicates);
-    criteria.orderBy(builder.asc(root.get("nomeCliente")));
+    criteria.orderBy(builder.asc(root.get("cliente").get("nomeCliente")));
 
     TypedQuery<ContasDto> query = manager.createQuery(criteria);
     adicionarRestricoesDaPaginacao(query, pageable);
 
-    return new PageImpl<>(query.getResultList(),pageable, total(contasFilter));
+    return new PageImpl<>(query.getResultList(),pageable, total(contasReceberFilter));
   }
   private void adicionarRestricoesDaPaginacao(TypedQuery<?> query, Pageable pageable)
   {
@@ -55,38 +55,38 @@ public class ContasRepositoryimpl implements ContasRepositoryQuery{
     query.setFirstResult(primeiroRegistroDaPagina);
     query.setMaxResults(totalRegistroPorPagina);
   }
-  private Long total(ContasFilter contasFilter)
+  private Long total(ContasReceberFilter contasReceberFilter)
   {
     CriteriaBuilder builder = manager.getCriteriaBuilder();
     CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
     Root<ContasReceber> root = criteria.from(ContasReceber.class);
 
-    Predicate[] predicates = criarRestricoes(builder, contasFilter, root);
+    Predicate[] predicates = criarRestricoes(builder, contasReceberFilter, root);
     criteria.where(predicates);
-    criteria.orderBy(builder.asc(root.get("nomeCliente")));
+    criteria.orderBy(builder.asc(root.get("cliente").get("nomeCliente")));
     criteria.select(builder.count(root));
     return manager.createQuery(criteria).getSingleResult();
   }
 
-  private Predicate[] criarRestricoes(CriteriaBuilder builder, ContasFilter contasFilter, Root<ContasReceber> root) {
+  private Predicate[] criarRestricoes(CriteriaBuilder builder, ContasReceberFilter contasReceberFilter, Root<ContasReceber> root) {
     List<Predicate> predicates = new ArrayList<>();
 
-    if (contasFilter.getDataconta() !=null)
+    if (contasReceberFilter.getDataconta() !=null)
     {
-    predicates.add(builder.greaterThanOrEqualTo(root.get("dataconta"), contasFilter.getDataconta())
+    predicates.add(builder.greaterThanOrEqualTo(root.get("dataconta"), contasReceberFilter.getDataconta())
     );
     }
 
-    if (!StringUtils.isEmpty(contasFilter.getNomeCliente()))
+    if (!StringUtils.isEmpty(contasReceberFilter.getNomeCliente()))
     {
-      predicates.add(builder.like(builder.lower(root.get("Cliente").get("nomecliente")),
-        "%" + contasFilter.getNomeCliente().toLowerCase() + "%"
+      predicates.add(builder.like(builder.lower(root.get("cliente").get("nomeCliente")),
+        "%" + contasReceberFilter.getNomeCliente().toLowerCase() + "%"
       ));
     }
 
-    if (contasFilter.getValorConta()!=null)
+    if (contasReceberFilter.getValorConta()!=null)
     {
-      predicates.add(builder.greaterThanOrEqualTo(root.get("valorConta"), contasFilter.getDataconta())
+      predicates.add(builder.greaterThanOrEqualTo(root.get("valorConta"), contasReceberFilter.getValorConta())
       );
     }
 

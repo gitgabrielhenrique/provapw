@@ -1,5 +1,7 @@
 package br.com.etec.gabriel.provapw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ public class Cliente {
     private Integer id;
     private String nomeCliente;
 
-
+  @JsonIgnore
 @OneToMany(mappedBy = "cliente")
 private List<ContasReceber> contasclientes= new ArrayList<>();
 
